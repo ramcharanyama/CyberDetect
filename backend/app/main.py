@@ -1,4 +1,5 @@
 import os
+import re
 from fastapi import FastAPI, UploadFile, File, HTTPException, Body
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
@@ -19,7 +20,6 @@ app = FastAPI(
     version="1.0.0"
 )
 
-# Enable CORS for React frontend (Vite dev server)
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -31,31 +31,21 @@ app.add_middleware(
 @app.on_event("startup")
 def startup_event():
     init_db()
-    # Pre-populate sample analyses into SQLite DB for demo correlation
     seed_samples_into_db()
 
 def process_eml_bytes(content_bytes: bytes, sample_key: Optional[str] = None) -> Dict[str, Any]:
     """Execute complete analysis pipeline on raw EML bytes."""
-    # 1. Parse EML
     parsed = parse_eml(content_bytes)
     headers = parsed["headers"]
     from_domain = headers["from_domain"]
     sender_ip = parsed["sender_ip"]
     raw_headers = parsed["raw_headers"]
     
-    # 2. DNS Verification (SPF/DKIM/DMARC)
     auth_res = verify_dns_auth(from_domain, raw_headers)
-    
-    # 3. Extract & Analyze URLs/Domains
     url_res = extract_and_analyze_urls(parsed["body"]["text"], parsed["body"]["html"])
-    
-    # 4. Threat Intel Lookup (Cached JSON+Mock Fallback)
     intel_res = lookup_ip_reputation(sender_ip)
-    
-    # 5. Risk Engine Scoring
     risk_res = calculate_risk_score(auth_res, url_res, intel_res, headers)
     
-    # 6. Save to DB
     record_id = save_analysis(
         sample_key=sample_key,
         subject=headers["subject"],
@@ -67,7 +57,6 @@ def process_eml_bytes(content_bytes: bytes, sample_key: Optional[str] = None) ->
         full_result={}
     )
     
-    # 7. Check for shared infrastructure / related emails by IP
     related_emails = find_related_emails_by_ip(sender_ip, current_record_id=record_id)
     
     full_output = {
@@ -94,7 +83,6 @@ def process_eml_bytes(content_bytes: bytes, sample_key: Optional[str] = None) ->
     return full_output
 
 def seed_samples_into_db():
-    """Seed sample emails into DB on startup if history is empty."""
     history = get_analysis_history(limit=5)
     if not history:
         sample_files = [
@@ -112,9 +100,11 @@ class LoginRequest(BaseModel):
     username: str
     password: str
 
+class PasteRequest(BaseModel):
+    content: str
+
 @app.post("/api/auth/login")
 def login(credentials: LoginRequest):
-    # Hardcoded single login for demo
     if credentials.username == "admin" and credentials.password == "cyberdetect2026":
         return {
             "status": "success",
@@ -130,7 +120,6 @@ def login(credentials: LoginRequest):
 
 @app.get("/api/samples")
 def list_samples():
-    """Return pre-configured seed sample emails."""
     return [
         {
             "id": "clean_newsletter",
@@ -160,7 +149,6 @@ def list_samples():
 
 @app.post("/api/analyze/upload")
 async def analyze_upload(file: UploadFile = File(...)):
-    """Analyze uploaded .eml file."""
     if not file.filename.endswith((".eml", ".txt")):
         raise HTTPException(status_code=400, detail="Only .eml files are supported")
     
@@ -170,9 +158,28 @@ async def analyze_upload(file: UploadFile = File(...)):
         
     return process_eml_bytes(content)
 
+@app.post("/api/analyze/paste")
+def analyze_paste(payload: PasteRequest):
+    """Analyze raw pasted email headers and content."""
+    text = payload.content.strip()
+    if not text:
+        raise HTTPException(status_code=400, detail="Pasted email content is empty")
+
+    # Basic header validation: check for From:, Received:, Subject:, Date: or @ address
+    has_header_pattern = bool(re.search(r'^(from|subject|received|date|to|return-path|reply-to):', text, re.IGNORECASE | re.MULTILINE))
+    has_email_addr = bool(re.search(r'[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}', text))
+
+    if not (has_header_pattern or has_email_addr):
+        raise HTTPException(
+            status_code=400, 
+            detail="Invalid email format. Please paste raw email headers (e.g. From:, Subject:, Received:) and content."
+        )
+
+    content_bytes = text.encode("utf-8")
+    return process_eml_bytes(content_bytes)
+
 @app.post("/api/analyze/sample/{sample_id}")
 def analyze_sample(sample_id: str):
-    """Analyze pre-configured sample email by ID."""
     sample_map = {
         "clean_newsletter": "01_clean_newsletter.eml",
         "paypal_phishing": "02_paypal_phishing.eml",
@@ -194,5 +201,5 @@ def analyze_sample(sample_id: str):
 
 @app.get("/api/history")
 def history():
-    """Get recent analysis history."""
-    return get_analysis_history(limit=20)
+    """Get recent analysis history (capped at 10)."""
+    return get_analysis_history(limit=10)
