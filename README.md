@@ -4,7 +4,7 @@ CyberDetect is a SOC-grade email forensic analysis platform built for cybersecur
 
 ---
 
-## 🚀 Quick Start (Demo Mode)
+## Quick Start (Demo Mode)
 
 ### Option 1: One-Command Launcher
 Run the single Python script to start both backend & frontend servers simultaneously:
@@ -29,13 +29,13 @@ npm run dev
 
 ---
 
-## 🔑 Demo Credentials
+## Demo Credentials
 - **Username**: `admin`
 - **Password**: `cyberdetect2026`
 
 ---
 
-## 🛡️ Pipeline Architecture & Scoring Rules
+## Pipeline Architecture & Scoring Rules
 
 1. **EML Parsing (`parser.py`)**: Hop-by-hop `Received` header trace, address extraction (`From`, `To`, `Reply-To`, `Return-Path`), and domain mismatch detection.
 2. **SPF/DKIM/DMARC Verification (`dns_verifier.py`)**: Uses `dnspython` to query live DNS records for SPF (`v=spf1`) and DMARC (`_dmarc.domain`), alongside DKIM signature validation.
@@ -52,7 +52,7 @@ npm run dev
 
 ---
 
-## 🧪 Seed Demo Data
+## Seed Demo Data
 Pre-loaded seed emails available in UI:
 - **Clean Newsletter**: Legitimate newsletter with passing SPF/DKIM/DMARC (`0 / 100 LOW`).
 - **PayPal Phishing**: Phishing email targeting credentials with typo-squatted domain `paypa1-security-check.com` (`100 / 100 CRITICAL`).
