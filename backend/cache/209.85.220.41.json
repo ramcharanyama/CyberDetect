@@ -1,0 +1,15 @@
+{
+  "ip_address": "209.85.220.41",
+  "is_malicious": false,
+  "abuse_confidence_score": 0,
+  "total_reports": 0,
+  "country_code": "US",
+  "country_name": "United States",
+  "isp": "Google LLC / Trusted Host",
+  "domain": "google.com",
+  "usage_type": "Commercial / Content Delivery",
+  "categories": [],
+  "last_reported_at": null,
+  "source": "AbuseIPDB (Mocked Demo Response)",
+  "is_cached": false
+}

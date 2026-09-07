@@ -1,5 +1,4 @@
 import React from 'react';
-import { Link2, AlertTriangle, ShieldAlert, CheckCircle, ExternalLink } from 'lucide-react';
 
 export default function UrlsTab({ data }) {
   const urlRes = data?.urls || {};
@@ -8,72 +7,64 @@ export default function UrlsTab({ data }) {
   return (
     <div className="space-y-6">
       
-      {/* Overview Banner */}
-      <div className="bg-slate-900/80 border border-slate-800 rounded-xl p-4 flex flex-wrap items-center justify-between gap-4">
-        <div className="flex items-center gap-3">
-          <div className="p-2 bg-cyan-500/10 border border-cyan-500/30 rounded-xl text-cyan-400">
-            <Link2 className="w-5 h-5" />
-          </div>
-          <div>
-            <h4 className="text-sm font-bold text-white">Extracted Links & Brand Impersonation Forensics</h4>
-            <p className="text-xs text-slate-400">
-              Levenshtein distance algorithm checked against major target brands (PayPal, Microsoft, Google, Amazon, etc.)
-            </p>
-          </div>
+      {/* Header Banner */}
+      <div className="bg-[#141414] border border-[#262626] rounded-lg p-4 flex flex-wrap items-center justify-between gap-4">
+        <div>
+          <h4 className="text-sm font-bold text-white">Extracted Links & Levenshtein Metrics</h4>
+          <p className="text-xs text-neutral-400">
+            Brand impersonation detection evaluated against target list (PayPal, Microsoft, Google, Amazon, etc.)
+          </p>
         </div>
 
         <div className="flex items-center gap-2 text-xs font-mono">
-          <span className="px-3 py-1 bg-slate-950 border border-slate-700 rounded-lg text-slate-300">
+          <span className="px-3 py-1 bg-[#0A0A0A] border border-[#262626] rounded text-neutral-300">
             Total URLs: <span className="font-bold text-white">{urlRes.url_count || 0}</span>
           </span>
           {urlRes.lookalike_detected && (
-            <span className="px-3 py-1 bg-rose-500/20 border border-rose-500/40 text-rose-300 rounded-lg font-bold">
-              LOOKALIKE DOMAIN DETECTED
+            <span className="px-3 py-1 bg-[#E63946] text-white rounded font-bold">
+              LOOKALIKE FLAG
             </span>
           )}
         </div>
       </div>
 
       {/* Safety Notice */}
-      <div className="p-3 bg-slate-950/80 border border-slate-800 rounded-xl text-xs text-slate-400 font-mono flex items-center gap-2">
-        <span className="text-cyan-400 font-bold">🔒 SECURITY ISOLATION GUARANTEE:</span>
-        <span>CyberDetect static engine extracted links safely without initiating external HTTP requests or visiting URLs.</span>
+      <div className="p-3 bg-[#0A0A0A] border border-[#262626] rounded text-xs text-neutral-400 font-mono">
+        <span className="text-[#E63946] font-bold">SECURITY NOTICE:</span> Links extracted statically without network calls or visiting targets.
       </div>
 
-      {/* Table of URLs */}
-      <div className="bg-slate-900/80 border border-slate-800 rounded-xl overflow-hidden">
+      {/* URLs Table */}
+      <div className="bg-[#141414] border border-[#262626] rounded-lg overflow-hidden">
         {urlsList.length === 0 ? (
-          <div className="p-8 text-center text-slate-400 text-xs font-mono">
-            No HTTP/HTTPS hyper-links or embedded domains discovered in email payload.
+          <div className="p-8 text-center text-neutral-500 text-xs font-mono">
+            No HTTP/HTTPS hyper-links or embedded domains discovered.
           </div>
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full text-left text-xs font-mono">
-              <thead className="bg-slate-950 text-slate-400 border-b border-slate-800 uppercase text-[10px] tracking-wider">
+              <thead className="bg-[#0A0A0A] text-neutral-400 border-b border-[#262626] uppercase text-[10px] tracking-wider">
                 <tr>
-                  <th className="py-3 px-4">Status</th>
+                  <th className="py-3 px-4">State</th>
                   <th className="py-3 px-4">Extracted URL</th>
-                  <th className="py-3 px-4">Target Domain</th>
-                  <th className="py-3 px-4">Levenshtein & Brand Match</th>
-                  <th className="py-3 px-4">Risk Reasons</th>
+                  <th className="py-3 px-4">Domain</th>
+                  <th className="py-3 px-4">Levenshtein Brand Analysis</th>
+                  <th className="py-3 px-4">Reasons</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-800/60">
+              <tbody className="divide-y divide-[#262626]">
                 {urlsList.map((item, idx) => {
                   const isSuspicious = item.is_suspicious;
                   const lookalike = item.lookalike || {};
 
                   return (
-                    <tr key={idx} className={isSuspicious ? 'bg-rose-950/10 hover:bg-rose-950/20' : 'hover:bg-slate-800/40'}>
+                    <tr key={idx} className={isSuspicious ? 'bg-rose-950/20' : 'hover:bg-[#1A1A1A]'}>
                       <td className="py-3 px-4">
                         {isSuspicious ? (
-                          <span className="px-2 py-0.5 bg-rose-500/20 text-rose-400 border border-rose-500/40 text-[10px] font-bold rounded flex items-center gap-1 w-max">
-                            <ShieldAlert className="w-3 h-3" />
-                            THREAT
+                          <span className="px-2 py-0.5 bg-[#E63946] text-white text-[10px] font-bold rounded">
+                            FLAGGED
                           </span>
                         ) : (
-                          <span className="px-2 py-0.5 bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 text-[10px] font-bold rounded flex items-center gap-1 w-max">
-                            <CheckCircle className="w-3 h-3" />
+                          <span className="px-2 py-0.5 bg-emerald-950 text-emerald-400 border border-emerald-800 text-[10px] font-bold rounded">
                             CLEAN
                           </span>
                         )}
@@ -86,20 +77,20 @@ export default function UrlsTab({ data }) {
                       </td>
 
                       <td className="py-3 px-4">
-                        <span className="text-cyan-300 font-bold">{item.domain}</span>
+                        <span className="text-neutral-200 font-bold">{item.domain}</span>
                       </td>
 
                       <td className="py-3 px-4">
                         {lookalike.is_lookalike ? (
-                          <div className="text-rose-300 font-bold">
-                            ⚠️ Brand '{lookalike.matched_brand}' (Distance: {lookalike.distance})
+                          <div className="text-[#E63946] font-bold">
+                            ✕ Impersonates '{lookalike.matched_brand}' (Distance: {lookalike.distance})
                           </div>
                         ) : lookalike.matched_brand ? (
                           <div className="text-emerald-400">
-                            ✓ Authentic {lookalike.matched_brand} Domain
+                            ✓ Genuine {lookalike.matched_brand}
                           </div>
                         ) : (
-                          <span className="text-slate-500">No major brand match</span>
+                          <span className="text-neutral-500">No brand match</span>
                         )}
                       </td>
 
@@ -109,7 +100,7 @@ export default function UrlsTab({ data }) {
                             {item.reasons.join(', ')}
                           </div>
                         ) : (
-                          <span className="text-slate-500">None</span>
+                          <span className="text-neutral-500">None</span>
                         )}
                       </td>
                     </tr>

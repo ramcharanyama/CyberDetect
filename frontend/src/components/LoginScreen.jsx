@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Shield, Lock, Cpu, AlertCircle, ArrowRight } from 'lucide-react';
+import { Lock, ArrowRight, AlertCircle } from 'lucide-react';
 
 export default function LoginScreen({ onLoginSuccess }) {
   const [username, setUsername] = useState('admin');
@@ -33,86 +33,80 @@ export default function LoginScreen({ onLoginSuccess }) {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-4">
+    <div className="min-h-screen bg-[#0A0A0A] flex items-center justify-center p-4">
       <div className="max-w-md w-full">
-        {/* Logo Branding */}
+        
+        {/* Brand */}
         <div className="text-center mb-8">
-          <div className="inline-flex items-center justify-center p-3 bg-cyan-500/10 border border-cyan-500/30 rounded-2xl mb-4 text-cyan-400 shadow-lg shadow-cyan-500/10">
-            <Shield className="w-10 h-10 animate-pulse" />
+          <div className="inline-flex items-center justify-center w-12 h-12 rounded bg-[#E63946] text-white font-black tracking-tighter text-2xl mb-3">
+            CD
           </div>
-          <h1 className="text-3xl font-extrabold tracking-tight text-white flex items-center justify-center gap-2">
-            Cyber<span className="text-cyan-400">Detect</span>
+          <h1 className="text-3xl font-extrabold tracking-tight text-white">
+            CYBER<span className="text-[#E63946]">DETECT</span>
           </h1>
-          <p className="text-slate-400 text-sm mt-1">Email Phishing & BEC Forensic Analyzer</p>
-          <div className="inline-block mt-3 px-3 py-1 bg-slate-900 border border-slate-700/60 rounded-full text-xs font-mono text-cyan-400">
-            HACKATHON SOC DEMO PORTAL
-          </div>
+          <p className="text-neutral-400 text-sm mt-1">Email Phishing & BEC Forensic Analyzer</p>
         </div>
 
-        {/* Login Box */}
-        <div className="bg-slate-900/90 border border-slate-800 rounded-2xl p-8 backdrop-blur-xl shadow-2xl glow-card">
-          <form onSubmit={handleSubmit} className="space-y-5">
+        {/* Login Panel */}
+        <div className="bg-[#141414] border border-[#262626] rounded-lg p-8">
+          <h2 className="text-lg font-bold text-white mb-6">Sign In to SOC Portal</h2>
+          
+          <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-              <label className="block text-xs font-mono text-slate-400 uppercase tracking-wider mb-2">
-                Analyst Username
+              <label className="block text-xs text-neutral-400 font-medium mb-1.5">
+                Username
               </label>
-              <div className="relative">
-                <input
-                  type="text"
-                  value={username}
-                  onChange={(e) => setUsername(e.target.value)}
-                  className="w-full bg-slate-950/80 border border-slate-700 rounded-xl px-4 py-3 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 font-mono transition"
-                  placeholder="admin"
-                  required
-                />
-              </div>
+              <input
+                type="text"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+                className="w-full bg-[#0A0A0A] border border-[#262626] focus:border-[#E63946] rounded px-3.5 py-2.5 text-sm text-white placeholder-neutral-600 focus:outline-none transition"
+                required
+              />
             </div>
 
             <div>
-              <label className="block text-xs font-mono text-slate-400 uppercase tracking-wider mb-2">
-                SOC Access Passcode
+              <label className="block text-xs text-neutral-400 font-medium mb-1.5">
+                Passcode
               </label>
-              <div className="relative">
-                <input
-                  type="password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  className="w-full bg-slate-950/80 border border-slate-700 rounded-xl px-4 py-3 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 font-mono transition"
-                  placeholder="••••••••••••"
-                  required
-                />
-                <Lock className="absolute right-3 top-3.5 w-4 h-4 text-slate-500" />
-              </div>
+              <input
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                className="w-full bg-[#0A0A0A] border border-[#262626] focus:border-[#E63946] rounded px-3.5 py-2.5 text-sm text-white placeholder-neutral-600 focus:outline-none transition"
+                required
+              />
             </div>
 
             {error && (
-              <div className="p-3 rounded-xl bg-rose-500/10 border border-rose-500/30 text-rose-400 text-xs flex items-center gap-2">
+              <div className="p-3 rounded bg-rose-950/40 border border-rose-800/60 text-rose-300 text-xs flex items-center gap-2">
                 <AlertCircle className="w-4 h-4 flex-shrink-0" />
                 <span>{error}</span>
               </div>
             )}
 
-            <div className="p-3 bg-cyan-950/30 border border-cyan-800/40 rounded-xl text-xs text-cyan-300/80 font-mono">
-              💡 Demo Mode Preset Credentials:<br />
-              Username: <span className="text-white font-bold">admin</span> | Password: <span className="text-white font-bold">cyberdetect2026</span>
+            <div className="p-3 bg-[#0A0A0A] border border-[#262626] rounded text-xs text-neutral-400">
+              Demo credentials pre-filled:<br />
+              <span className="text-neutral-200 font-mono">admin</span> / <span className="text-neutral-200 font-mono">cyberdetect2026</span>
             </div>
 
             <button
               type="submit"
               disabled={loading}
-              className="w-full bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-slate-950 font-bold py-3.5 px-6 rounded-xl shadow-lg shadow-cyan-500/20 transition flex items-center justify-center gap-2 disabled:opacity-50"
+              className="w-full bg-[#E63946] hover:bg-[#D62839] text-white font-bold py-3 px-4 rounded transition flex items-center justify-center gap-2 disabled:opacity-50"
             >
               {loading ? (
-                <div className="w-5 h-5 border-2 border-slate-950 border-t-transparent rounded-full animate-spin" />
+                <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
               ) : (
                 <>
-                  <span>Enter SOC Dashboard</span>
+                  <span>Sign In</span>
                   <ArrowRight className="w-4 h-4" />
                 </>
               )}
             </button>
           </form>
         </div>
+
       </div>
     </div>
   );
