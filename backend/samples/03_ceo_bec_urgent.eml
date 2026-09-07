@@ -1,0 +1,33 @@
+Received: from attacker-relay.vps-hoster.xyz (attacker-relay.vps-hoster.xyz [198.51.100.45])
+	by mx.company-corp.com with ESMTPS id b77-90812c019dsi881920plk.104.2026.09.07.09.15.00
+	for <finance.controller@company-corp.com>;
+	Mon, 07 Sep 2026 09:15:00 -0700 (PDT)
+Received: from unknown (HELO mail-spoof.internal) ([198.51.100.45])
+	by attacker-relay.vps-hoster.xyz with SMTP id z819201;
+	Mon, 07 Sep 2026 09:14:50 -0700
+From: "John Smith (CEO)" <john.smith@company-corp.com>
+To: Finance Controller <finance.controller@company-corp.com>
+Reply-To: "John Smith (Private)" <ceo-urgent-reply@mail-service-gateway.net>
+Return-Path: <spoofed-bounces@mail-service-gateway.net>
+Subject: CONFIDENTIAL: Urgent Wire Transfer for Vendor Acquisition
+Date: Mon, 07 Sep 2026 16:14:30 +0000
+Message-ID: <CEO-EXEC-20260907-00912@company-corp.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+
+Hi Finance Team,
+
+I am currently in an urgent confidential meeting regarding an acquisition deal. 
+I need you to process an immediate wire transfer of $148,500 to our new vendor's account today before 3 PM EST.
+
+Please review the payment portal details at:
+http://198.51.100.45/wire-transfer-portal?ref=executive-NDA
+
+Do NOT discuss this with anyone in the office yet as the NDA is strictly binding until tomorrow morning.
+Reply directly to this email with the wire confirmation receipt.
+
+Best regards,
+
+John Smith
+Chief Executive Officer
+Company Corp International

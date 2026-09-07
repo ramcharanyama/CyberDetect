@@ -1,0 +1,35 @@
+Received: from mail-ed1-f51.google.com (mail-ed1-f51.google.com [209.85.218.51])
+	by mx.google.com with ESMTPS id c12-20020a170902640c00b00511fae231b1si8590390plj.147.2026.09.05.08.30.00
+	for <alex.dev@cyberdetect-demo.com>;
+	Sat, 05 Sep 2026 08:30:00 -0700 (PDT)
+Received: from google.com (outbound.google.com [209.85.218.51])
+	by mail-ed1-f51.google.com with SMTP id t11so1234567edj.2
+	for <alex.dev@cyberdetect-demo.com>;
+	Sat, 05 Sep 2026 08:29:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com;
+	s=202601; h=from:to:subject:date:message-id:reply-to;
+	bh=47DEQpj8HBSa+/TImW+5JCeuQeRkm5NMpJWZG3hSuFU=;
+	b=Kj3xZ8u9...
+From: Google Security Team <no-reply@google.com>
+To: Alex Developer <alex.dev@cyberdetect-demo.com>
+Reply-To: Google Security <no-reply@google.com>
+Return-Path: <no-reply@google.com>
+Subject: Monthly Security Digest & Account Summary
+Date: Sat, 05 Sep 2026 15:29:50 +0000
+Message-ID: <20260905152950.18274@google.com>
+MIME-Version: 1.0
+Content-Type: text/html; charset=UTF-8
+
+<!DOCTYPE html>
+<html>
+<head><title>Google Security Digest</title></head>
+<body>
+  <h2>Google Security Digest</h2>
+  <p>Here is your monthly account security summary.</p>
+  <ul>
+    <li><a href="https://google.com/security">Review Your Security Settings</a></li>
+    <li><a href="https://google.com/privacy">Read Google Privacy Policy</a></li>
+  </ul>
+  <p>Best regards,<br>The Google Security Team</p>
+</body>
+</html>

@@ -1,0 +1,39 @@
+Received: from attacker-relay.vps-hoster.xyz (attacker-relay.vps-hoster.xyz [198.51.100.45])
+	by mx.google.com with ESMTPS id p89-30129a007b821si9910243plm.201.2026.09.06.14.12.00
+	for <victim.user@cyberdetect-demo.com>;
+	Sun, 06 Sep 2026 14:12:00 -0700 (PDT)
+Received: from unknown (HELO fake-paypal-server.local) ([198.51.100.45])
+	by attacker-relay.vps-hoster.xyz with SMTP id x901283;
+	Sun, 06 Sep 2026 14:11:55 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=paypa1-security-check.com;
+	s=default; h=from:to:subject:date:message-id;
+	bh=INVALIDHASH123456789=;
+	b=FAKESIG987654321=
+From: PayPal Security Alert <service@paypal.com>
+To: Victim User <victim.user@cyberdetect-demo.com>
+Reply-To: PayPal Verification <verify-account@paypa1-security-check.com>
+Return-Path: <bounce-notice@malicious-phish-infra.net>
+Subject: URGENT: Your PayPal Account Has Been Suspended!
+Date: Sun, 06 Sep 2026 21:11:45 +0000
+Message-ID: <ALERT-20260906-881920@paypal-security-alert.com>
+MIME-Version: 1.0
+Content-Type: text/html; charset=UTF-8
+
+<!DOCTYPE html>
+<html>
+<head><title>PayPal Account Notice</title></head>
+<body style="font-family: Arial, sans-serif;">
+  <div style="border: 1px solid #ccc; padding: 20px; max-width: 600px;">
+    <h1 style="color: #003087;">PayPal</h1>
+    <h3 style="color: #d9534f;">Account Access Restricted</h3>
+    <p>Dear Valued Customer,</p>
+    <p>We detected unauthorized login attempts on your PayPal account. For your security, your account features have been temporarily disabled.</p>
+    <p>You must verify your identity within 24 hours to prevent permanent account suspension.</p>
+    <p style="text-align: center; margin: 30px 0;">
+      <a href="https://paypa1-security-check.com/login?token=98217398" style="background-color: #0070ba; color: white; padding: 12px 24px; text-decoration: none; border-radius: 4px; font-weight: bold;">Verify Account Now</a>
+    </p>
+    <p>Or update your billing information at: <a href="https://micros0ft-verify-login.org/billing">https://micros0ft-verify-login.org/billing</a></p>
+    <p>Thank you,<br>PayPal Fraud Prevention Team</p>
+  </div>
+</body>
+</html>

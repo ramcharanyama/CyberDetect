@@ -1,0 +1,19 @@
+{
+  "ip_address": "198.51.100.45",
+  "is_malicious": true,
+  "abuse_confidence_score": 94,
+  "total_reports": 87,
+  "country_code": "US",
+  "country_name": "United States",
+  "isp": "Offshore VPS Hoster Inc",
+  "domain": "vps-hoster.xyz",
+  "usage_type": "Data Center / Web Hosting",
+  "categories": [
+    "Phishing",
+    "Email Spam",
+    "Malware Spreader"
+  ],
+  "last_reported_at": "2026-09-07T10:00:00Z",
+  "source": "AbuseIPDB (Mocked Demo Response)",
+  "is_cached": false
+}
