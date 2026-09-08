@@ -8,41 +8,41 @@ export default function UrlsTab({ data }) {
     <div className="space-y-6">
       
       {/* Header Banner */}
-      <div className="bg-[#141414] border border-[#262626] rounded-lg p-4 flex flex-wrap items-center justify-between gap-4">
+      <div className="bg-white border border-[#E0DFDC] rounded-xl p-4 flex flex-wrap items-center justify-between gap-4 shadow-xs">
         <div>
-          <h4 className="text-sm font-bold text-white">Extracted Links & Levenshtein Metrics</h4>
-          <p className="text-xs text-neutral-400">
-            Brand impersonation detection evaluated against target list (PayPal, Microsoft, Google, Amazon, etc.)
+          <h4 className="text-sm font-bold text-[#191919]">Extracted Links & Levenshtein Metrics</h4>
+          <p className="text-xs text-[#666666]">
+            Brand impersonation detection evaluated against target brand dictionary (PayPal, Microsoft, Google, Amazon, etc.)
           </p>
         </div>
 
         <div className="flex items-center gap-2 text-xs font-mono">
-          <span className="px-3 py-1 bg-[#0A0A0A] border border-[#262626] rounded text-neutral-300">
-            Total URLs: <span className="font-bold text-white">{urlRes.url_count || 0}</span>
+          <span className="px-3 py-1 bg-[#F4F2EE] border border-[#E0DFDC] rounded-full text-[#191919]">
+            Total URLs: <span className="font-bold text-[#0A66C2]">{urlRes.url_count || 0}</span>
           </span>
           {urlRes.lookalike_detected && (
-            <span className="px-3 py-1 bg-[#E63946] text-white rounded font-bold">
-              LOOKALIKE FLAG
+            <span className="px-3 py-1 bg-rose-50 border border-rose-200 text-[#B91C1C] rounded-full font-bold">
+              LOOKALIKE DETECTED
             </span>
           )}
         </div>
       </div>
 
       {/* Safety Notice */}
-      <div className="p-3 bg-[#0A0A0A] border border-[#262626] rounded text-xs text-neutral-400 font-mono">
-        <span className="text-[#E63946] font-bold">SECURITY NOTICE:</span> Links extracted statically without network calls or visiting targets.
+      <div className="p-3 bg-[#F4F2EE] border border-[#E0DFDC] rounded-lg text-xs text-[#666666] font-mono">
+        <span className="text-[#0A66C2] font-bold">SECURITY GUARANTEE:</span> Links extracted statically without external HTTP requests or visiting target URLs.
       </div>
 
       {/* URLs Table */}
-      <div className="bg-[#141414] border border-[#262626] rounded-lg overflow-hidden">
+      <div className="bg-white border border-[#E0DFDC] rounded-xl overflow-hidden shadow-xs">
         {urlsList.length === 0 ? (
-          <div className="p-8 text-center text-neutral-500 text-xs font-mono">
+          <div className="p-8 text-center text-[#666666] text-xs font-mono">
             No HTTP/HTTPS hyper-links or embedded domains discovered.
           </div>
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full text-left text-xs font-mono">
-              <thead className="bg-[#0A0A0A] text-neutral-400 border-b border-[#262626] uppercase text-[10px] tracking-wider">
+              <thead className="bg-[#F4F2EE] text-[#666666] border-b border-[#E0DFDC] uppercase text-[10px] tracking-wider">
                 <tr>
                   <th className="py-3 px-4">State</th>
                   <th className="py-3 px-4">Extracted URL</th>
@@ -51,56 +51,56 @@ export default function UrlsTab({ data }) {
                   <th className="py-3 px-4">Reasons</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-[#262626]">
+              <tbody className="divide-y divide-[#E0DFDC]">
                 {urlsList.map((item, idx) => {
                   const isSuspicious = item.is_suspicious;
                   const lookalike = item.lookalike || {};
 
                   return (
-                    <tr key={idx} className={isSuspicious ? 'bg-rose-950/20' : 'hover:bg-[#1A1A1A]'}>
+                    <tr key={idx} className={isSuspicious ? 'bg-rose-50/40 hover:bg-rose-50/70' : 'hover:bg-[#F4F2EE]/50'}>
                       <td className="py-3 px-4">
                         {isSuspicious ? (
-                          <span className="px-2 py-0.5 bg-[#E63946] text-white text-[10px] font-bold rounded">
+                          <span className="px-2 py-0.5 bg-rose-50 border border-rose-200 text-[#B91C1C] text-[10px] font-bold rounded-full">
                             FLAGGED
                           </span>
                         ) : (
-                          <span className="px-2 py-0.5 bg-emerald-950 text-emerald-400 border border-emerald-800 text-[10px] font-bold rounded">
+                          <span className="px-2 py-0.5 bg-emerald-50 border border-emerald-200 text-[#0F7B3F] text-[10px] font-bold rounded-full">
                             CLEAN
                           </span>
                         )}
                       </td>
 
                       <td className="py-3 px-4 max-w-xs">
-                        <div className="text-white font-mono text-[11px] truncate" title={item.url}>
+                        <div className="text-[#191919] font-mono text-[11px] truncate" title={item.url}>
                           {item.url}
                         </div>
                       </td>
 
                       <td className="py-3 px-4">
-                        <span className="text-neutral-200 font-bold">{item.domain}</span>
+                        <span className="text-[#0A66C2] font-bold">{item.domain}</span>
                       </td>
 
                       <td className="py-3 px-4">
                         {lookalike.is_lookalike ? (
-                          <div className="text-[#E63946] font-bold">
+                          <div className="text-[#B91C1C] font-bold">
                             ✕ Impersonates '{lookalike.matched_brand}' (Distance: {lookalike.distance})
                           </div>
                         ) : lookalike.matched_brand ? (
-                          <div className="text-emerald-400">
+                          <div className="text-[#0F7B3F]">
                             ✓ Genuine {lookalike.matched_brand}
                           </div>
                         ) : (
-                          <span className="text-neutral-500">No brand match</span>
+                          <span className="text-[#666666]">No brand match</span>
                         )}
                       </td>
 
                       <td className="py-3 px-4">
                         {item.reasons.length > 0 ? (
-                          <div className="text-rose-300 text-[11px]">
+                          <div className="text-[#B91C1C] text-[11px]">
                             {item.reasons.join(', ')}
                           </div>
                         ) : (
-                          <span className="text-neutral-500">None</span>
+                          <span className="text-[#666666]">None</span>
                         )}
                       </td>
                     </tr>

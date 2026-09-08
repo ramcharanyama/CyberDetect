@@ -1,0 +1,18 @@
+{
+  "ip_address": "108.174.3.203",
+  "is_malicious": true,
+  "abuse_confidence_score": 78,
+  "total_reports": 34,
+  "country_code": "RO",
+  "country_name": "Romania",
+  "isp": "Unknown Relay Host",
+  "domain": "relay-net.org",
+  "usage_type": "VPN / Proxy Host",
+  "categories": [
+    "Suspicious Host",
+    "Port Scan"
+  ],
+  "last_reported_at": "2026-09-06T18:22:00Z",
+  "source": "AbuseIPDB (Mocked Demo Response)",
+  "is_cached": false
+}

@@ -9,7 +9,7 @@ CyberDetect is a SOC-grade email forensic analysis platform built for cybersecur
 ### Option 1: One-Command Launcher
 Run the single Python script to start both backend & frontend servers simultaneously:
 ```bash
-python start_demo.py
+python start.py
 ```
 Open **http://localhost:5173** in your browser.
 

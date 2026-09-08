@@ -1,54 +1,42 @@
 @import "tailwindcss";
 
+/* Force Tailwind CSS v4 dark variant to respond to .dark class on html/body instead of OS media query */
+@variant dark (&:where(.dark, .dark *));
+
 @layer base {
   body {
-    background-color: #0A0A0A;
-    color: #E5E5E5;
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background-color: #F4F2EE;
+    color: #191919;
+    font-family: -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
     min-height: 100vh;
     -webkit-font-smoothing: antialiased;
-    selection-background-color: #E63946;
-    selection-color: #FFFFFF;
+    transition: background-color 0.2s ease, color 0.2s ease;
+  }
+
+  body.dark, html.dark {
+    background-color: #0B0B0C;
+    color: #EDEDED;
   }
 }
 
-/* Hide scrollbar for horizontal row sliders while maintaining scrollability */
-.no-scrollbar::-webkit-scrollbar {
-  display: none;
-}
-.no-scrollbar {
-  -ms-overflow-style: none;
-  scrollbar-width: none;
-}
-
-/* Custom dark scrollbar */
+/* Custom scrollbar */
 ::-webkit-scrollbar {
   width: 6px;
   height: 6px;
 }
 ::-webkit-scrollbar-track {
-  background: #0A0A0A;
+  background: transparent;
 }
 ::-webkit-scrollbar-thumb {
-  background: #262626;
+  background: #CCCCCC;
   border-radius: 3px;
 }
+.dark ::-webkit-scrollbar-thumb {
+  background: #2A2B2E;
+}
 ::-webkit-scrollbar-thumb:hover {
-  background: #404040;
+  background: #999999;
 }
-
-/* Hero Score Resolve Animation */
-@keyframes scoreResolve {
-  0% {
-    opacity: 0;
-    transform: scale(0.92);
-  }
-  100% {
-    opacity: 1;
-    transform: scale(1);
-  }
-}
-
-.animate-score-resolve {
-  animation: scoreResolve 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+.dark ::-webkit-scrollbar-thumb:hover {
+  background: #404247;
 }

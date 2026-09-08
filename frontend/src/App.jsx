@@ -2,8 +2,7 @@ import React, { useState, useEffect } from 'react';
 import LoginScreen from './components/LoginScreen';
 import HeaderNav from './components/HeaderNav';
 import FileUploader from './components/FileUploader';
-import CaseRows from './components/CaseRows';
-import RelatedInfraBanner from './components/RelatedInfraBanner';
+import CaseFeed from './components/CaseFeed';
 import RiskOverviewCard from './components/RiskOverviewCard';
 import OverviewTab from './components/Tabs/OverviewTab';
 import HeadersTab from './components/Tabs/HeadersTab';
@@ -21,7 +20,34 @@ export default function App() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
-  // Restore session token & load history on start
+  // Dark Mode state: Persisted in localStorage, default to OS preference
+  const [darkMode, setDarkMode] = useState(() => {
+    const savedTheme = localStorage.getItem('cyberdetect_theme');
+    if (savedTheme) {
+      return savedTheme === 'dark';
+    }
+    return window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+  });
+
+  // Apply dark class to documentElement AND body on state change
+  useEffect(() => {
+    if (darkMode) {
+      document.documentElement.classList.add('dark');
+      document.body.classList.add('dark');
+      document.documentElement.setAttribute('data-theme', 'dark');
+      localStorage.setItem('cyberdetect_theme', 'dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+      document.body.classList.remove('dark');
+      document.documentElement.setAttribute('data-theme', 'light');
+      localStorage.setItem('cyberdetect_theme', 'light');
+    }
+  }, [darkMode]);
+
+  const handleToggleDarkMode = () => {
+    setDarkMode(prev => !prev);
+  };
+
   useEffect(() => {
     const savedUser = localStorage.getItem('cyberdetect_user');
     if (savedUser) {
@@ -34,7 +60,6 @@ export default function App() {
   useEffect(() => {
     if (user) {
       fetchHistory();
-      // Auto-load default sample analysis on start
       handleSelectSample('paypal_phishing');
     }
   }, [user]);
@@ -89,6 +114,34 @@ export default function App() {
     }
   };
 
+  const handleAnalyzePaste = async (content) => {
+    setLoading(true);
+    setError('');
+
+    try {
+      const res = await fetch('/api/analyze/paste', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ content })
+      });
+
+      if (!res.ok) {
+        const errData = await res.json();
+        throw new Error(errData.detail || 'Failed to analyze pasted email content');
+      }
+
+      const data = await res.json();
+      setAnalysis(data);
+      setActiveTab('overview');
+      fetchHistory();
+    } catch (err) {
+      setError(err.message || 'Error parsing pasted email content');
+      throw err;
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const handleSelectSample = async (sampleId) => {
     setLoading(true);
     setError('');
@@ -114,15 +167,13 @@ export default function App() {
     }
   };
 
-  const handleSelectCaseFromRow = (caseItem) => {
+  const handleSelectCaseFromFeed = (caseItem) => {
     if (caseItem.sample_key) {
       handleSelectSample(caseItem.sample_key);
     } else if (caseItem.id || caseItem.record_id) {
-      // If we clicked a row card, load its data directly or re-run
       if (caseItem.risk) {
         setAnalysis(caseItem);
       } else {
-        // Find in history or re-trigger sample if mapped
         if (caseItem.subject?.includes("PayPal")) {
           handleSelectSample("paypal_phishing");
         } else if (caseItem.subject?.includes("Wire")) {
@@ -135,7 +186,13 @@ export default function App() {
   };
 
   if (!user) {
-    return <LoginScreen onLoginSuccess={handleLoginSuccess} />;
+    return (
+      <LoginScreen
+        onLoginSuccess={handleLoginSuccess}
+        darkMode={darkMode}
+        onToggleDarkMode={handleToggleDarkMode}
+      />
+    );
   }
 
   const tabs = [
@@ -147,30 +204,27 @@ export default function App() {
   ];
 
   return (
-    <div className="min-h-screen bg-[#0A0A0A] text-[#E5E5E5] flex flex-col font-sans selection:bg-[#E63946] selection:text-white">
-      <HeaderNav user={user} onLogout={handleLogout} />
+    <div className="min-h-screen bg-[#F4F2EE] dark:bg-[#0B0B0C] text-[#191919] dark:text-[#EDEDED] flex flex-col font-sans selection:bg-[#0A66C2] selection:text-white transition-colors">
+      <HeaderNav
+        user={user}
+        onLogout={handleLogout}
+        darkMode={darkMode}
+        onToggleDarkMode={handleToggleDarkMode}
+      />
 
-      <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-10">
+      <main className="flex-1 max-w-5xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6">
         
-        {/* Upload & Sample Selector */}
+        {/* Upload / Paste & Sample Selector Panel */}
         <FileUploader
           onAnalyzeFile={handleAnalyzeFile}
+          onAnalyzePaste={handleAnalyzePaste}
           onSelectSample={handleSelectSample}
           loading={loading}
         />
 
-        {/* Netflix-Style Horizontal Browse Rows (Cases / Uploads / High Risk) */}
-        {historyList.length > 0 && (
-          <CaseRows
-            cases={historyList}
-            activeAnalysisId={analysis?.record_id}
-            onSelectCase={handleSelectCaseFromRow}
-          />
-        )}
-
-        {/* Global Error Banner */}
+        {/* Global Error Alert */}
         {error && (
-          <div className="p-4 bg-rose-950/40 border border-rose-800 text-rose-300 text-sm rounded flex items-center gap-3">
+          <div className="p-4 bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-800 text-[#B91C1C] dark:text-rose-400 text-sm rounded-xl flex items-center gap-3">
             <AlertCircle className="w-5 h-5 flex-shrink-0" />
             <span>{error}</span>
           </div>
@@ -178,45 +232,39 @@ export default function App() {
 
         {/* Loading Spinner */}
         {loading && (
-          <div className="bg-[#141414] border border-[#262626] rounded-lg p-12 text-center space-y-4">
-            <div className="w-10 h-10 border-2 border-[#E63946] border-t-transparent rounded-full animate-spin mx-auto" />
+          <div className="bg-white dark:bg-[#17181A] border border-[#E0DFDC] dark:border-[#2A2B2E] rounded-xl p-12 text-center space-y-3 shadow-xs">
+            <div className="w-8 h-8 border-2 border-[#0A66C2] dark:border-[#3B82F6] border-t-transparent rounded-full animate-spin mx-auto" />
             <div>
-              <h3 className="text-base font-bold text-white">Running CyberDetect Forensics Engine...</h3>
-              <p className="text-xs text-neutral-400 font-mono mt-1">
+              <h3 className="text-sm font-bold text-[#191919] dark:text-white">Running CyberDetect Forensics Engine...</h3>
+              <p className="text-xs text-[#666666] dark:text-[#A0A0A0] font-mono mt-0.5">
                 Parsing Headers • Verifying SPF/DKIM/DMARC • Calculating Levenshtein Metrics • Querying Threat Intel
               </p>
             </div>
           </div>
         )}
 
-        {/* Full Analysis View */}
+        {/* Full Single-Email Forensic Detail View */}
         {!loading && analysis && (
-          <div className="space-y-8">
+          <div className="space-y-6">
             
-            {/* Related Infrastructure Banner */}
-            <RelatedInfraBanner
-              relatedEmails={analysis.related_emails}
-              senderIp={analysis.sender_ip}
-            />
-
-            {/* Hero Risk Section */}
+            {/* Hero Score Section */}
             <RiskOverviewCard risk={analysis.risk} />
 
-            {/* Horizontal Underline Tabs */}
-            <div className="bg-[#141414] border border-[#262626] rounded-lg overflow-hidden">
+            {/* Underlined Tabs Detail Panel */}
+            <div className="bg-white dark:bg-[#17181A] border border-[#E0DFDC] dark:border-[#2A2B2E] rounded-xl overflow-hidden shadow-xs">
               
-              {/* Horizontal Underline Tab Bar */}
-              <div className="border-b border-[#262626] bg-[#0A0A0A] px-6 flex items-center gap-8 overflow-x-auto no-scrollbar">
+              {/* Blue Underline Tab Bar with Left Padding Matching Panels Above */}
+              <div className="border-b border-[#E0DFDC] dark:border-[#2A2B2E] bg-white dark:bg-[#17181A] px-6 flex items-center gap-6 overflow-x-auto">
                 {tabs.map((t) => {
                   const isActive = activeTab === t.id;
                   return (
                     <button
                       key={t.id}
                       onClick={() => setActiveTab(t.id)}
-                      className={`py-4 text-xs font-mono font-bold tracking-wider uppercase border-b-2 transition ${
+                      className={`py-3.5 text-xs font-semibold tracking-wide uppercase border-b-2 transition cursor-pointer ${
                         isActive
-                          ? 'border-[#E63946] text-white'
-                          : 'border-transparent text-neutral-500 hover:text-neutral-300'
+                          ? 'border-[#0A66C2] dark:border-[#3B82F6] text-[#0A66C2] dark:text-[#3B82F6]'
+                          : 'border-transparent text-[#666666] dark:text-[#A0A0A0] hover:text-[#191919] dark:hover:text-white'
                       }`}
                     >
                       {t.label}
@@ -225,7 +273,7 @@ export default function App() {
                 })}
               </div>
 
-              {/* Tab Panel Content */}
+              {/* Tab Content Panel */}
               <div className="p-6">
                 {activeTab === 'overview' && <OverviewTab data={analysis} />}
                 {activeTab === 'headers' && <HeadersTab data={analysis} />}
@@ -239,11 +287,20 @@ export default function App() {
           </div>
         )}
 
+        {/* Vertical Feed of 10 Most Recent Analyzed Cases */}
+        {historyList.length > 0 && (
+          <CaseFeed
+            cases={historyList}
+            activeAnalysisId={analysis?.record_id}
+            onSelectCase={handleSelectCaseFromFeed}
+          />
+        )}
+
       </main>
 
       {/* Footer */}
-      <footer className="border-t border-[#1C1C1C] bg-[#0A0A0A] py-6 text-center text-xs text-neutral-600 font-mono">
-        CyberDetect Forensic Engine • Hackathon Demo Architecture
+      <footer className="border-t border-[#E0DFDC] dark:border-[#2A2B2E] bg-white dark:bg-[#17181A] py-6 text-center text-xs text-[#666666] dark:text-[#A0A0A0] font-mono transition-colors">
+        CyberDetect Forensic Engine • Professional SOC Investigation Feed
       </footer>
     </div>
   );
