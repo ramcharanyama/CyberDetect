@@ -57,7 +57,7 @@ export default function LoginScreen({ onLoginSuccess, darkMode, onToggleDarkMode
         {/* Login Box */}
         <div className="bg-white dark:bg-[#17181A] border border-[#E0DFDC] dark:border-[#2A2B2E] rounded-xl p-8 shadow-xs">
           <h2 className="text-xl font-bold text-[#191919] dark:text-white mb-1">Sign in</h2>
-          <p className="text-xs text-[#666666] dark:text-[#A0A0A0] mb-6">Stay updated on cybersecurity forensics & threat signals</p>
+          <p className="text-xs text-[#666666] dark:text-[#A0A0A0] mb-6">Stay updated on cybersecurity forensics and threat signals</p>
           
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
